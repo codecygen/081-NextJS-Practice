@@ -13,8 +13,6 @@ const EventList = (props) => {
         />
     ));
 
-    console.log(props.items);
-
     return (
         <ul>
             {eventList}
