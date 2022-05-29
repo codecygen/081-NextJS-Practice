@@ -1,7 +1,7 @@
-const [...slug] = () => {
+const FilteredEventsPage = () => {
   return (
-    <div>[...slug]</div>
+    <div>FilteredEventsPage</div>
   )
 }
 
-export default [...slug]
+export default FilteredEventsPage;
