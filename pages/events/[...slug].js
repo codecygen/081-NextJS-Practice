@@ -1,31 +1,31 @@
 import { useRouter } from 'next/router';
 
-import { getFilteredEvents } from '../../dummy-data';
+import { getFilteredEvents } from '../../components/helpers/apiUtil';
 import EventList from '../../components/events/EventList';
 import ResultsTitle from '../../components/events/ResultsTitle';
 import ErrorAlert from '../../components/ui/ErrorAlert';
 import Button from '../../components/ui/Button';
 
-const FilteredEventsPage = () => {
+const FilteredEventsPage = (props) => {
   const router = useRouter();
 
-  const filterData = router.query.slug;
+  // const filterData = router.query.slug;
 
-  if (!filterData) {
-    return <p className='center'>Loading...</p>
-  }
+  // if (!filterData) {
+  //   return <p className='center'>Loading...</p>
+  // }
 
-  const filteredYear = filterData[0];
-  const filteredMonth = filterData[1];
+  // const filteredYear = filterData[0];
+  // const filteredMonth = filterData[1];
 
-  const numYear = +filteredYear;
-  const numMonth = +filteredMonth;
+  // const numYear = +filteredYear;
+  // const numMonth = +filteredMonth;
 
-  const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
-    || numYear < 2021 || numMonth < 1 || numMonth > 12
-    ;
+  // const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
+  //   || numYear < 2021 || numMonth < 1 || numMonth > 12
+  // ;
 
-  if (isInvalidFilter) {
+  if (props.hasError) {
     return (
       <>
         <ErrorAlert>
@@ -38,10 +38,7 @@ const FilteredEventsPage = () => {
     );
   }
 
-  const filteredEvents = getFilteredEvents({
-    year: numYear,
-    month: numMonth
-  });
+  const filteredEvents = props.events;
 
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
@@ -56,7 +53,7 @@ const FilteredEventsPage = () => {
     );
   }
 
-  const date = new Date(numYear, numMonth - 1);
+  const date = new Date(props.date.year, props.date.month - 1);
 
   return (
     <>
@@ -65,5 +62,44 @@ const FilteredEventsPage = () => {
     </>
   )
 }
+
+export const getServerSideProps = async (context) => {
+  const filterData = context.params.slug;
+
+  const filteredYear = filterData[0];
+  const filteredMonth = filterData[1];
+
+  const numYear = +filteredYear;
+  const numMonth = +filteredMonth;
+
+  const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
+    || numYear < 2021 || numMonth < 1 || numMonth > 12
+  ;
+
+  if (isInvalidFilter) {
+    return {
+      props: { hasError: true }
+      // notFound: true,
+      // redirect: {
+      //   destination: '/no-data',
+      // }
+    };
+  }
+
+  const filteredEvents = await getFilteredEvents({
+    year: numYear,
+    month: numMonth
+  });
+
+  return {
+    props: {
+      events: filteredEvents,
+      date: {
+        year: numYear,
+        month: numMonth
+      }
+    }
+  };
+};
 
 export default FilteredEventsPage;
