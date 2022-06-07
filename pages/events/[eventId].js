@@ -44,7 +44,9 @@ export const getStaticProps = async (context) => {
   return {
     props: {
       selectedEvent: event
-    }
+    },
+
+    revalidate: 30
   };
 };
 
