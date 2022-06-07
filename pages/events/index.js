@@ -23,12 +23,4 @@ const AllEventsPage = () => {
   );
 };
 
-export const getStaticProps = async () => {
-  return {
-    props: {
-      featuredEvents: aras
-    }
-  };
-};
-
 export default AllEventsPage;
