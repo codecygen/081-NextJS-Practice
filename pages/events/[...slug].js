@@ -1,31 +1,53 @@
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
 
-import { getFilteredEvents } from '../../components/helpers/apiUtil';
+// import { getFilteredEvents } from '../../components/helpers/apiUtil';
 import EventList from '../../components/events/EventList';
 import ResultsTitle from '../../components/events/ResultsTitle';
 import ErrorAlert from '../../components/ui/ErrorAlert';
 import Button from '../../components/ui/Button';
 
 const FilteredEventsPage = (props) => {
+  const [events, setEvents] = useState([]);
   const router = useRouter();
 
-  // const filterData = router.query.slug;
+  const filterData = router.query.slug;
 
-  // if (!filterData) {
-  //   return <p className='center'>Loading...</p>
-  // }
+  const fetchLink = 'https://food-order-app-database-fa642-default-rtdb.firebaseio.com/events.json';
+  const fetcher = (url) => fetch(url).then(res => res.json());
+  const { data, error } = useSWR(fetchLink, fetcher);
 
-  // const filteredYear = filterData[0];
-  // const filteredMonth = filterData[1];
+  useEffect(() => {
+    if (data) {
+      const allEvents = [];
 
-  // const numYear = +filteredYear;
-  // const numMonth = +filteredMonth;
+      for (const key in data) {
+        allEvents.push({
+          id: key,
+          ...data[key]
+        });
+      }
 
-  // const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
-  //   || numYear < 2021 || numMonth < 1 || numMonth > 12
-  // ;
+      setEvents(allEvents);
+    }
+  }, [data]);
 
-  if (props.hasError) {
+  if (!events) {
+    return <p className='center'>Loading...</p>
+  }
+
+  const filteredYear = filterData[0];
+  const filteredMonth = filterData[1];
+
+  const numYear = +filteredYear;
+  const numMonth = +filteredMonth;
+
+  const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
+    || numYear < 2021 || numMonth < 1 || numMonth > 12 || error
+  ;
+
+  if (isInvalidFilter) {
     return (
       <>
         <ErrorAlert>
@@ -38,7 +60,10 @@ const FilteredEventsPage = (props) => {
     );
   }
 
-  const filteredEvents = props.events;
+  const filteredEvents = events.filter((event) => {
+    const eventDate = new Date(event.date);
+    return eventDate.getFullYear() === numYear && eventDate.getMonth() === numMonth - 1;
+  });
 
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
@@ -53,7 +78,7 @@ const FilteredEventsPage = (props) => {
     );
   }
 
-  const date = new Date(props.date.year, props.date.month - 1);
+  const date = new Date(numYear, numMonth - 1);
 
   return (
     <>
@@ -63,43 +88,43 @@ const FilteredEventsPage = (props) => {
   )
 }
 
-export const getServerSideProps = async (context) => {
-  const filterData = context.params.slug;
+// export const getServerSideProps = async (context) => {
+//   const filterData = context.params.slug;
 
-  const filteredYear = filterData[0];
-  const filteredMonth = filterData[1];
+//   const filteredYear = filterData[0];
+//   const filteredMonth = filterData[1];
 
-  const numYear = +filteredYear;
-  const numMonth = +filteredMonth;
+//   const numYear = +filteredYear;
+//   const numMonth = +filteredMonth;
 
-  const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
-    || numYear < 2021 || numMonth < 1 || numMonth > 12
-  ;
+//   const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
+//     || numYear < 2021 || numMonth < 1 || numMonth > 12
+//   ;
 
-  if (isInvalidFilter) {
-    return {
-      props: { hasError: true }
-      // notFound: true,
-      // redirect: {
-      //   destination: '/no-data',
-      // }
-    };
-  }
+//   if (isInvalidFilter) {
+//     return {
+//       props: { hasError: true }
+//       // notFound: true,
+//       // redirect: {
+//       //   destination: '/no-data',
+//       // }
+//     };
+//   }
 
-  const filteredEvents = await getFilteredEvents({
-    year: numYear,
-    month: numMonth
-  });
+//   const filteredEvents = await getFilteredEvents({
+//     year: numYear,
+//     month: numMonth
+//   });
 
-  return {
-    props: {
-      events: filteredEvents,
-      date: {
-        year: numYear,
-        month: numMonth
-      }
-    }
-  };
-};
+//   return {
+//     props: {
+//       events: filteredEvents,
+//       date: {
+//         year: numYear,
+//         month: numMonth
+//       }
+//     }
+//   };
+// };
 
 export default FilteredEventsPage;
