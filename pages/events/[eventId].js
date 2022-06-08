@@ -4,8 +4,6 @@ import EventSummary from '../../components/event-detail/event-summary';
 import EventLogistics from '../../components/event-detail/event-logistics';
 import EventContent from '../../components/event-detail/event-content';
 
-import ErrorAlert from '../../components/ui/ErrorAlert';
-
 const EventDetailPage = (props) => {
 
   const event = props.selectedEvent;
@@ -35,9 +33,7 @@ const EventDetailPage = (props) => {
 };
 
 export const getStaticProps = async (context) => {
-  const { params } = context;
-
-  const eventId = params.eventId;
+  const eventId = context.params.eventId;
 
   const event = await getEventById(eventId);
 
@@ -52,13 +48,13 @@ export const getStaticProps = async (context) => {
 
 export const getStaticPaths = async () => {
 
-  const featuredEvents = await getFeaturedEvents();
+  const events = await getFeaturedEvents();
 
-  const pathsWithParams = featuredEvents.map(featuredEvent => ({ params: { eventId: featuredEvent.id }}));
+  const paths = events.map(event => ({ params: { eventId: event.id }}));
 
   return {
-    paths: pathsWithParams,
-    fallback: "blocking"
+    paths: paths,
+    fallback: 'blocking'
   };
 };
 
