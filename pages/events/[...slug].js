@@ -12,7 +12,6 @@ const FilteredEventsPage = () => {
   const router = useRouter();
 
   const filterData = router.query.slug;
-  console.log(filterData);
 
   const fetchLink = 'https://food-order-app-database-fa642-default-rtdb.firebaseio.com/events.json';
   const fetcher = (url) => fetch(url).then(res => res.json());
