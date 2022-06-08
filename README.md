@@ -8,3 +8,4 @@
 Keywords:
 - **Next-Adding-Head-Tag-To-Project-For-SEO**, the meta data of the head tag which can be injected into the page files for SEO purpose.
 - **Next-Adding-Head-Tag-To-Root-Page-For-Every-Page-SEO**, the meta data inside '_app.js' file will be displayed in every page as '_app.js' is the root file of project.
+- **Next-document-js-file**, this file does not exist by default but it will be taken into consideration when it is created along side with "_app.js". The file should be named as "_document.js". You can create the whole HTML structure with this element. For example you may wanna create overlay div which can be used to port some of the components.
