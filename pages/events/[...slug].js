@@ -2,17 +2,17 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
-// import { getFilteredEvents } from '../../components/helpers/apiUtil';
 import EventList from '../../components/events/EventList';
 import ResultsTitle from '../../components/events/ResultsTitle';
 import ErrorAlert from '../../components/ui/ErrorAlert';
 import Button from '../../components/ui/Button';
 
-const FilteredEventsPage = (props) => {
+const FilteredEventsPage = () => {
   const [events, setEvents] = useState([]);
   const router = useRouter();
 
   const filterData = router.query.slug;
+  console.log(filterData);
 
   const fetchLink = 'https://food-order-app-database-fa642-default-rtdb.firebaseio.com/events.json';
   const fetcher = (url) => fetch(url).then(res => res.json());
@@ -43,7 +43,7 @@ const FilteredEventsPage = (props) => {
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
 
-  const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
+  const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2030
     || numYear < 2021 || numMonth < 1 || numMonth > 12 || error
   ;
 
