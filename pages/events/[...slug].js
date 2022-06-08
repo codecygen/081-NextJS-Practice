@@ -1,14 +1,17 @@
-import { useEffect, useState } from 'react';
+// In this section, I only used client side fetching because filtered results are not important
+// for SEO.
+
+import { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
 
 import EventList from '../../components/events/EventList';
 import ResultsTitle from '../../components/events/ResultsTitle';
-import ErrorAlert from '../../components/ui/ErrorAlert';
 import Button from '../../components/ui/Button';
+import ErrorAlert from '../../components/ui/ErrorAlert';
 
-const FilteredEventsPage = () => {
-  const [events, setEvents] = useState([]);
+function FilteredEventsPage(props) {
+  const [loadedEvents, setLoadedEvents] = useState();
   const router = useRouter();
 
   const filterData = router.query.slug;
@@ -19,21 +22,21 @@ const FilteredEventsPage = () => {
 
   useEffect(() => {
     if (data) {
-      const allEvents = [];
+      const events = [];
 
       for (const key in data) {
-        allEvents.push({
+        events.push({
           id: key,
-          ...data[key]
+          ...data[key],
         });
       }
 
-      setEvents(allEvents);
+      setLoadedEvents(events);
     }
   }, [data]);
 
-  if (!events) {
-    return <p className='center'>Loading...</p>
+  if (!loadedEvents) {
+    return <p className='center'>Loading...</p>;
   }
 
   const filteredYear = filterData[0];
@@ -42,88 +45,56 @@ const FilteredEventsPage = () => {
   const numYear = +filteredYear;
   const numMonth = +filteredMonth;
 
-  const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2030
-    || numYear < 2021 || numMonth < 1 || numMonth > 12 || error
-  ;
-
-  if (isInvalidFilter) {
+  if (
+    isNaN(numYear) ||
+    isNaN(numMonth) ||
+    numYear > 2030 ||
+    numYear < 2021 ||
+    numMonth < 1 ||
+    numMonth > 12 ||
+    error
+  ) {
     return (
-      <>
+      <Fragment>
         <ErrorAlert>
           <p>Invalid filter. Please adjust your values!</p>
         </ErrorAlert>
-        <p className='center'>
+        <div className='center'>
           <Button link='/events'>Show All Events</Button>
-        </p>
-      </>
+        </div>
+      </Fragment>
     );
   }
 
-  const filteredEvents = events.filter((event) => {
+  const filteredEvents = loadedEvents.filter((event) => {
     const eventDate = new Date(event.date);
-    return eventDate.getFullYear() === numYear && eventDate.getMonth() === numMonth - 1;
+    return (
+      eventDate.getFullYear() === numYear &&
+      eventDate.getMonth() === numMonth - 1
+    );
   });
 
   if (!filteredEvents || filteredEvents.length === 0) {
     return (
-      <>
+      <Fragment>
         <ErrorAlert>
           <p>No events found for the chosen filter!</p>
         </ErrorAlert>
-        <p className='center'>
+        <div className='center'>
           <Button link='/events'>Show All Events</Button>
-        </p>
-      </>
+        </div>
+      </Fragment>
     );
   }
 
   const date = new Date(numYear, numMonth - 1);
 
   return (
-    <>
+    <Fragment>
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
-    </>
-  )
+    </Fragment>
+  );
 }
-
-// export const getServerSideProps = async (context) => {
-//   const filterData = context.params.slug;
-
-//   const filteredYear = filterData[0];
-//   const filteredMonth = filterData[1];
-
-//   const numYear = +filteredYear;
-//   const numMonth = +filteredMonth;
-
-//   const isInvalidFilter = isNaN(numYear) || isNaN(numMonth) || numYear > 2022
-//     || numYear < 2021 || numMonth < 1 || numMonth > 12
-//   ;
-
-//   if (isInvalidFilter) {
-//     return {
-//       props: { hasError: true }
-//       // notFound: true,
-//       // redirect: {
-//       //   destination: '/no-data',
-//       // }
-//     };
-//   }
-
-//   const filteredEvents = await getFilteredEvents({
-//     year: numYear,
-//     month: numMonth
-//   });
-
-//   return {
-//     props: {
-//       events: filteredEvents,
-//       date: {
-//         year: numYear,
-//         month: numMonth
-//       }
-//     }
-//   };
-// };
 
 export default FilteredEventsPage;
