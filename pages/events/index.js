@@ -1,3 +1,6 @@
+// Next-Adding-Head-Tag-To-Project-For-SEO
+import Head from 'next/head';
+
 import { useRouter } from 'next/router';
 import { getAllEvents } from '../../components/helpers/apiUtil';
 import EventList from '../../components/events/EventList';
@@ -14,8 +17,13 @@ const AllEventsPage = (props) => {
 
   return (
     <>
+      {/* Next-Adding-Head-Tag-To-Project-For-SEO */}
+      <Head>
+        <title>All Events</title>
+        <meta name="description" content="Add a new meetup here!" />
+      </Head>
       <EventsSearch onSearch={findEventsHandler} />
-      <EventList 
+      <EventList
         items={events}
       />
     </>

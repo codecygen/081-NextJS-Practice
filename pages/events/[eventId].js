@@ -1,3 +1,6 @@
+// Next-Adding-Head-Tag-To-Project-For-SEO
+import Head from 'next/head';
+
 import { getEventById, getFeaturedEvents } from '../../components/helpers/apiUtil';
 
 import EventSummary from '../../components/event-detail/event-summary';
@@ -18,6 +21,11 @@ const EventDetailPage = (props) => {
 
   return (
     <>
+      {/* Next-Adding-Head-Tag-To-Project-For-SEO */}
+      <Head>
+        <title>{event.title}</title>
+        <meta name="description" content={event.description} />
+      </Head>
       <EventSummary title={event.title} />
       <EventLogistics
         date={event.date}
@@ -50,7 +58,7 @@ export const getStaticPaths = async () => {
 
   const events = await getFeaturedEvents();
 
-  const paths = events.map(event => ({ params: { eventId: event.id }}));
+  const paths = events.map(event => ({ params: { eventId: event.id } }));
 
   return {
     paths: paths,

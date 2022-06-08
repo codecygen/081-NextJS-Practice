@@ -4,3 +4,6 @@
 - **styles** folder stores all the css related files. This folder contains **/styles/globals.css** which is hooked to the app from **/pages/_app.js** file.
 -  **/pages/_app.js** file is used for having a layout purposes. You can wrap the **Component** component there to create your own layout for every page.
 - Check **/Components/ui/Button.js** component for multi purpose usage.
+
+Keywords:
+- Next-Adding-Head-Tag-To-Project-For-SEO

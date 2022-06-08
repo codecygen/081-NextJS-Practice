@@ -1,6 +1,9 @@
 // In this section, I only used client side fetching because filtered results are not important
 // for SEO.
 
+// Next-Adding-Head-Tag-To-Project-For-SEO
+import Head from 'next/head';
+
 import { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import useSWR from 'swr';
@@ -91,6 +94,11 @@ function FilteredEventsPage(props) {
 
   return (
     <Fragment>
+      {/* Next-Adding-Head-Tag-To-Project-For-SEO */}
+      <Head>
+        <title>Filtered Events</title>
+        <meta name="description" content={`All events for ${numMonth}/${numYear}.`} />
+      </Head>
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </Fragment>
