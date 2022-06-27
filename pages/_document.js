@@ -9,6 +9,7 @@ class MyDocument extends Document {
         return (
             // Here language is set to english
             <Html lang='en'>
+                <Head />
                 <body>
                     {/* For example you may wanna create overlay div which can 
                     be used to port some of the components. */}
