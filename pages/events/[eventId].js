@@ -1,5 +1,6 @@
 // Next-Adding-Head-Tag-To-Project-For-SEO
 import Head from 'next/head';
+import Comments from '../../components/input/comments';
 
 import { getEventById, getFeaturedEvents } from '../../components/helpers/apiUtil';
 
@@ -36,6 +37,7 @@ const EventDetailPage = (props) => {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments eventId={event.id} />
     </>
   );
 };

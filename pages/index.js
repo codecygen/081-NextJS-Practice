@@ -1,5 +1,6 @@
 // Next-Adding-Head-Tag-To-Project-For-SEO
 import Head from 'next/head';
+import NewsletterRegistration from '../components/input/newsletter-registration';
 
 import { getFeaturedEvents } from "../components/helpers/apiUtil";
 import EventList from "../components/events/EventList";
@@ -12,6 +13,7 @@ const HomePage = (props) => {
                 <title>Featured Events</title>
                 <meta name="description" content="Add a new meetup here!" />
             </Head>
+            <NewsletterRegistration />
             <EventList
                 items={props.events}
             />
