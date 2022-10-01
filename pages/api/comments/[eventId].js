@@ -25,6 +25,8 @@ const commentHandler = (req, res) => {
     
 
     if (req.method === 'GET') {
+        console.log(process.env.MONGODB_ATLAS_LINK);
+
         const dummyList = [
             { id: 'c1', name: 'Aras', comment: 'The first comment.' },
             { id: 'c2', name: 'Nafiz', comment: 'The second comment.' }
