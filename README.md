@@ -11,6 +11,7 @@ Keywords:
 - **Next-document-js-file**, this file does not exist by default but it will be taken into consideration when it is created along side with "_app.js". The file should be named as "_document.js". You can create the whole HTML structure with this element. For example you may wanna create overlay div which can be used to port some of the components.
 - **Next-Image-Optimization-Fast-Loading**, Use Image component for that. To understand what image size to set, examine the CSS code and give the expected values. The image size added in the component has nothing to do with the CSS code. It is the image size that will fetched to the client side. Image component optimizes the image sizes which will make the app much faster. We can delete the cache and double check this from the "Network" tab of the Dev Tools. These images are regenerated with the optimized size when requested by the app and then stored in the server for future requests. So they will be served upon new requests. These images also have lazy loading feature, meaning that they will only be downloaded whenever needed which makes the app less lighter. There are other things to consider for Image component. You should definitely check them out to configure your images to suit your need.
 - **Next-API-Routes**
+- **Next-Fetch**
 
 
 

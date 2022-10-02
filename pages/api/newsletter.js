@@ -1,16 +1,5 @@
-import { MongoClient } from 'mongodb';
-
-const connectDatabase = async () => {
-    const mongoDBLink = process.env.MONGODB_ATLAS_LINK;
-    const client = await MongoClient.connect(mongoDBLink);
-
-    return client;
-};
-
-const inserDocument = async (client, document) => {
-    const db = client.db();
-    await db.collection('newsletter').insertOne({ email: userEmail })
-};
+// Next-API-Routes
+import { connectDatabase, insertDocument, getAllDocuments } from '../../components/helpers/db-util';
 
 const newsletterHandler = async (req, res) => {
     let client;
@@ -18,7 +7,10 @@ const newsletterHandler = async (req, res) => {
     try {
         client = await connectDatabase();
     } catch (err) {
-        res.status(500).json({  });
+        res.status(500).json({ message: 'Connecting to the database failed!' });
+        // Return is put here to prevent code to continue on trying to insert document
+        // if this try catch section fails.
+        return;
     }
 
     if (req.method === 'POST') {
@@ -30,10 +22,12 @@ const newsletterHandler = async (req, res) => {
         }
 
         try {
-            await inserDocument(client, { email: userEmail });
+            await insertDocument(client, 'newsletter', { email: userEmail });
+            // Return is put here to prevent code to continue if inserting data fails.
             client.close();
         } catch (err) {
-            console.error(err);
+            res.status(500).json({ message: 'Inserting data failed!' });
+            return;
         }
 
         client.close();

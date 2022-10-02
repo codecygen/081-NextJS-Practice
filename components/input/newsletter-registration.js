@@ -1,3 +1,5 @@
+// Next-Fetch
+
 import { useRef } from 'react';
 import classes from './newsletter-registration.module.css';
 
