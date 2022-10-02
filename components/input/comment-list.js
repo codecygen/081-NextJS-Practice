@@ -4,7 +4,7 @@ function CommentList(props) {
   const { items } = props;
 
   const allComments = items.map(item => (
-    <li key={item.id}>
+    <li key={item._id}>
       <p>{item.comment}</p>
       <div>
         By <address>{item.name}</address>

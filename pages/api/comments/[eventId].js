@@ -9,6 +9,7 @@ const commentHandler = async (req, res) => {
     const mongoDBLink = process.env.MONGODB_ATLAS_LINK;
     const client = await MongoClient.connect(mongoDBLink);
     const db = client.db();
+    const commentsCollection = db.collection('comments');
 
     if (req.method === 'POST') {
         const invalidEmail = !email.includes('@');
@@ -27,7 +28,6 @@ const commentHandler = async (req, res) => {
             eventId
         };
 
-        const commentsCollection = db.collection('comments');
         const result = await commentsCollection.insertOne(newComment);
         newComment.id = result.insertedId;
         
@@ -36,14 +36,14 @@ const commentHandler = async (req, res) => {
     
 
     if (req.method === 'GET') {
-        console.log(process.env.MONGODB_ATLAS_LINK);
+        // sort _id: -1 will sort the id's in decending order
+        const documents = await commentsCollection
+            .find()
+            .sort({ _id: -1 })
+            .toArray()
+        ;
 
-        const dummyList = [
-            { id: 'c1', name: 'Aras', comment: 'The first comment.' },
-            { id: 'c2', name: 'Nafiz', comment: 'The second comment.' }
-        ]
-
-        res.status(200).json({ comments: dummyList });
+        res.status(200).json({ comments: documents });
     }
 
     client.close();
