@@ -4,11 +4,11 @@ import classes from './newsletter-registration.module.css';
 function NewsletterRegistration() {
   const emailInputRef = useRef();
 
-  function registrationHandler(event) {
+  const registrationHandler = async (event) => {
     event.preventDefault();
     const enteredEmail = emailInputRef.current.value; 
 
-    fetch('/api/newsletter', {
+    await fetch('/api/newsletter', {
       method: 'POST',
       body: JSON.stringify({ email: enteredEmail }),
       headers: {

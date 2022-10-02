@@ -1,7 +1,14 @@
-const commentHandler = (req, res) => {
+import { MongoClient } from "mongodb";
+
+const commentHandler = async (req, res) => {
     const eventId = req.query.eventId;
+    console.log(`This is ${eventId}`);
 
     const { email, name, comment } = req.body;
+
+    const mongoDBLink = process.env.MONGODB_ATLAS_LINK;
+    const client = await MongoClient.connect(mongoDBLink);
+    const db = client.db();
 
     if (req.method === 'POST') {
         const invalidEmail = !email.includes('@');
@@ -14,11 +21,15 @@ const commentHandler = (req, res) => {
         }
 
         const newComment = {
-            id: new Date().toISOString(),
             email,
             name,
-            comment
+            comment,
+            eventId
         };
+
+        const commentsCollection = db.collection('comments');
+        const result = await commentsCollection.insertOne(newComment);
+        newComment.id = result.insertedId;
         
         res.status(201).json({ message: 'Comment added!', comment: newComment });
     }
@@ -34,6 +45,8 @@ const commentHandler = (req, res) => {
 
         res.status(200).json({ comments: dummyList });
     }
+
+    client.close();
 };
 
 export default commentHandler;

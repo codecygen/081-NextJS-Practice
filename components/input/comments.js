@@ -20,8 +20,8 @@ function Comments(props) {
     setShowComments((prevStatus) => !prevStatus);
   }
 
-  function addCommentHandler(commentData) {
-    fetch(`/api/comments/${eventId}`, {
+  const addCommentHandler = async (commentData) => {
+    await fetch(`/api/comments/${eventId}`, {
       method: 'POST',
       body: JSON.stringify(commentData),
       headers: {
